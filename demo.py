@@ -125,10 +125,10 @@ def main(img_path, json_path=None):
     images = os.listdir(img_path + 'frames/')
     images.sort()
     Cams = []
-    Poses = []
-    Shapes = []
+    poses = []
+    shapes = []
     for image in images :
-        input_img, proc_param, img = preprocess_image(image, json_path)
+        input_img, proc_param, img = preprocess_image(img_path + 'frames/' + image, json_path)
         # Add batch dimension: 1 x D x D x 3
         input_img = np.expand_dims(input_img, 0)
 
@@ -142,10 +142,10 @@ def main(img_path, json_path=None):
         ## SAVING SMPL POSE
         print("FINISHED " + image)
         Cams.append(cams)
-        Poses.append(theta[3:75])
-        Shapes.append(theta[75:85])
+        poses.append(theta[3:75])
+        shapes.append(theta[75:85])
         #visualize(img, proc_param, joints[0], verts[0], cams[0])
-    data = {"cams" : Cams, "poses": Poses, "shapes" : Shapes}
+    data = {"cams" : Cams, "poses": poses, "shapes" : shapes}
     print("SAVING DATA")
     outfile = open(img_path + 'hmr.pkl', 'wb')
     pickle.dump(data, outfile)
