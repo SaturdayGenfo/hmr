@@ -41,7 +41,7 @@ flags.DEFINE_string(
     'If specified, uses the openpose output to crop the image.')
 
 
-def visualize(img, proc_param, joints, verts, cam):
+def visualize(img, proc_param, joints, verts, cam, path):
     """
     Renders the result in original image coordinate frame.
     """
@@ -88,7 +88,7 @@ def visualize(img, proc_param, joints, verts, cam):
     plt.title('diff vp')
     plt.axis('off')
     plt.draw()
-    plt.show()
+    plt.savefig(path)
     # import ipdb
     # ipdb.set_trace()
 
@@ -122,6 +122,10 @@ def preprocess_image(img_path, json_path=None):
 def main(img_path, json_path=None):
     sess = tf.Session()
     model = RunModel(config, sess=sess)
+    
+    #Creating visualisation Folder
+    os.mkdir(img_path + 'viz/')
+    
     images = os.listdir(img_path + 'frames/')
     images.sort()
     Cams = []
@@ -144,7 +148,7 @@ def main(img_path, json_path=None):
         Cams.append(cams)
         poses.append(theta[3:75])
         shapes.append(theta[75:85])
-        #visualize(img, proc_param, joints[0], verts[0], cams[0])
+        visualize(img, proc_param, joints[0], verts[0], cams[0], img_path + 'viz/' +  image)
     data = {"cams" : Cams, "poses": poses, "shapes" : shapes}
     print("SAVING DATA")
     outfile = open(img_path + 'hmr.pkl', 'wb')
