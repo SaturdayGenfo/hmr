@@ -145,9 +145,9 @@ def main(img_path, json_path=None):
     
         ## SAVING SMPL POSE
         print("FINISHED " + image)
-        Cams.append(cams)
-        poses.append(theta[3:75])
-        shapes.append(theta[75:85])
+        Cams.append(theta[0])
+        poses.append(theta[1])
+        shapes.append(theta[2])
         visualize(img, proc_param, joints[0], verts[0], cams[0], img_path + 'viz/' +  image)
     data = {"cams" : Cams, "poses": poses, "shapes" : shapes}
     print("SAVING DATA")
